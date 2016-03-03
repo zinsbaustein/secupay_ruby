@@ -22,7 +22,35 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Configure the gem when you load your application like this:
+
+```ruby
+SecupayRuby.configure do |config|
+  config.api_key = 'your secupay api key'
+  config.host = SecupayRuby::Host::PRODUCTION # default, change to TEST for testing
+end
+```
+
+Create a new payment like this:
+
+```ruby
+payment = SecupayRuby::Payment.new
+
+payment.init(amount: 500, payment_type: SecupayRuby::Payment::Types::PREPAY) # calls the API to create a new payment
+
+payment.hash # returns a hash serving as payment ID
+payment.purpose # returns reference number to be used as reference in wire transfer
+payment.payment_data # returns bank account information for this payment
+```
+
+Get status updates for a given payment
+```ruby
+payment = SecupayRuby::Payment.new(hash: 'payment_hash')
+payment.load_status # calls API to get status information
+
+payment.status # returns current status
+...
+```
 
 ## Development
 
