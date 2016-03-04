@@ -52,6 +52,60 @@ payment.status # returns current status
 ...
 ```
 
+Working with sub API keys: You can request new API keys through the API with you main key.
+You will at least need some user information and a payout account.
+Create objects containing this information and pass them to the method requesting the code.
+Use the following code to get a new key:
+
+```ruby
+project_name = "Awesome new project"
+
+user = SecupayRuby::DataObjects::User.new(title: "Mr.",
+                                          company: "ACME GmbH & Co KG",
+                                          first_name: "Peter",
+                                          last_name: "Müller",
+                                          street: "Sesamstraße",
+                                          house_number: "Sesamstadt",
+                                          zip: "12345",
+                                          city: "Sesamstadt",
+                                          phone_number: "0190123456",
+                                          date_of_birth: "06.10.1980",
+                                          email: "peter@example.com")
+
+payout_account = SecupayRuby::DataObjects::PayoutAccount.new(iban: "DE123",
+                                                             bic: "BIC456")
+
+# request new key
+subkey = SecupayRuby::ApiKey::SubKey.request_api_key(project_name: project_name,
+                                                          user: user,
+                                                          payout_account: payout_account)
+
+# now you can create payment objects with the new key
+payment = SecupayRuby::Payment.new api_key: subkey
+```
+
+For storing keys requested through the API in a database, we recommend you store it in encrypted form.
+You have to store the ciphertext, iv and mac along with the project name.
+
+```ruby
+# for storage, do:
+store\_in\_database(payment.ciphertext, payment.iv, payment.mac, payment.project_name)
+
+...
+
+# load info from database
+ciphertext = load\_from\_database(ciphertext)
+iv = load\_from\_database(iv)
+mac = load\_from\_database(mac)
+project_name = load\_from\_database(project_name)
+
+# create subkey object from this information
+subkey = SecupayRuby::ApiKey::SubKey.new(ciphertext: ciphertext,
+                                         iv: iv,
+                                         mac: mac,
+                                         project_name: project_name)
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
