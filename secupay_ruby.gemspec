@@ -10,8 +10,8 @@ Gem::Specification.new do |spec|
   spec.email         = ["dominic.breuker@gmail.com"]
 
   spec.summary       = "API wrapper for SecuPay"
-  spec.description   = "Only tested with prepay and debit so far."
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.description   = "Only tested with prepay so far."
+  spec.homepage      = "https://github.com/HitFox/secupay_ruby"
   spec.license       = "MIT"
 
   # Prevent pushing this gem to RubyGems.org by setting 'allowed_push_host', or
