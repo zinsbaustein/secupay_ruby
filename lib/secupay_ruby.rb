@@ -2,6 +2,7 @@ require "secupay_ruby/version"
 
 module SecupayRuby
   autoload :Configuration, "secupay_ruby/configuration"
+  autoload :Host, 'secupay_ruby/configuration'
   autoload :Payment, "secupay_ruby/payment"
 
   autoload :Requests, "secupay_ruby/requests/base"
