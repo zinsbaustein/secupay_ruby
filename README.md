@@ -89,15 +89,15 @@ You have to store the ciphertext, iv and mac along with the project name.
 
 ```ruby
 # for storage, do:
-store\_in\_database(payment.ciphertext, payment.iv, payment.mac, payment.project_name)
+store_in_database(payment.ciphertext, payment.iv, payment.mac, payment.project_name)
 
 ...
 
 # load info from database
-ciphertext = load\_from\_database(ciphertext)
-iv = load\_from\_database(iv)
-mac = load\_from\_database(mac)
-project_name = load\_from\_database(project_name)
+ciphertext = load_from_database(ciphertext)
+iv = load_from_database(iv)
+mac = load_from_database(mac)
+project_name = load_from_database(project_name)
 
 # create subkey object from this information
 subkey = SecupayRuby::ApiKey::SubKey.new(ciphertext: ciphertext,
