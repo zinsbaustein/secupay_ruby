@@ -54,7 +54,6 @@ module SecupayRuby
       @response = SecupayRuby::Requests::Init.post(api_key: api_key,
                                                    payment: self,
                                                    body: params)
-      raise_if_request_error
 
       extract_response_params(INIT_FIELDS)
     end
@@ -68,7 +67,6 @@ module SecupayRuby
       @response = SecupayRuby::Requests::Status.post(api_key: api_key,
                                                      payment: self,
                                                      body: params)
-      raise_if_request_error
 
       extract_response_params(STATUS_FIELDS)
     end
@@ -80,7 +78,6 @@ module SecupayRuby
 
       @response = SecupayRuby::Requests::Capture.post(api_key: api_key,
                                                       payment: self)
-      raise_if_request_error
     end
 
     def cancel
@@ -90,24 +87,17 @@ module SecupayRuby
 
       @response = SecupayRuby::Requests::Cancel.post(api_key: api_key,
                                                      payment: self)
-      raise_if_request_error
     end
 
     class << self
       def get_types(api_key: SecupayRuby::ApiKey::MasterKey.new)
         response = SecupayRuby::Requests::GetTypes.post(api_key: api_key)
 
-        raise RequestError, response.errors if response.http_status != "200" || response.status != "ok"
-
         response.data
       end
     end
 
     private
-
-    def raise_if_request_error
-      raise RequestError.new @response.errors if error?
-    end
 
     def raise_if_not_initiated
       raise PaymentStatusError.new "Not initiated" unless hash?
@@ -121,10 +111,6 @@ module SecupayRuby
 
     def raise_if_payment_not_initiated
       raise PaymentStatusError.new "Payment already initiated" if hash?
-    end
-
-    def error?
-      @response.http_status != "200" || @response.status != "ok"
     end
 
     def extract_response_params(fields)

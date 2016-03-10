@@ -11,6 +11,8 @@ module SecupayRuby
     autoload :Cancel, "secupay_ruby/requests/cancel"
     autoload :RequestApiKey, "secupay_ruby/requests/request_api_key"
 
+    autoload :Response, "secupay_ruby/requests/response"
+
     class Base
       class << self
         def post(api_key: , payment: nil, body: {})
@@ -60,8 +62,6 @@ module SecupayRuby
         end
       end
 
-      Response = Struct.new(:http_status, :status, :data, :errors)
-
       def http_response
         @response ||= begin
           response = Net::HTTP.start(uri.hostname, uri.port, use_ssl: uri.scheme == "https") do |http|
@@ -70,10 +70,14 @@ module SecupayRuby
 
           json_response = JSON.parse(response.body)
 
-          Response.new(response.header.code,
-                       json_response["status"],
-                       json_response["data"],
-                       json_response["errors"])
+          response = SecupayRuby::Requests::Response.new(http_status: response.header.code,
+                                                         status: json_response["status"],
+                                                         data: json_response["data"],
+                                                         errors: json_response["errors"])
+
+          raise RequestError.new(response.errors) if response.failed?
+
+          response
         end
       end
     end
