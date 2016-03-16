@@ -35,7 +35,7 @@ module SecupayRuby
       !hash.nil?
     end
 
-    def init(amount:, payment_type:, demo: 0)
+    def init(amount:, payment_type:, demo: 0, user: nil)
       @response = nil
 
       @amount = amount
@@ -50,6 +50,7 @@ module SecupayRuby
         demo: demo,
         payment_type: payment_type
       }
+      params = params.merge(user.to_api_fields) if user
 
       @response = SecupayRuby::Requests::Init.post(api_key: api_key,
                                                    payment: self,

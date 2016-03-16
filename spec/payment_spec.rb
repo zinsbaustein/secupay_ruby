@@ -5,15 +5,37 @@ describe SecupayRuby::Payment do
 
   describe 'initiate payment' do
     subject { payment.init amount: 500,
-                     payment_type: SecupayRuby::Payment::Types::PREPAY }
+                     payment_type: SecupayRuby::Payment::Types::PREPAY, user: user }
+    let(:user) { nil }
 
     context 'when using master API key' do
       let(:payment) { SecupayRuby::Payment.new }
 
-      it "can be initiated" do
-        subject
+      context 'when no user is given' do
+        it "can be initiated" do
+          subject
 
-        expect_successfull_initialization
+          expect_successfull_initialization
+        end
+      end
+
+      context 'when a user is given' do
+        let(:user) { SecupayRuby::DataObjects::User.new(title: "Mr.",
+                                                        company: "ACME GmbH & Co KG",
+                                                        first_name: "Peter",
+                                                        last_name: "Müller",
+                                                        street: "Sesamstraße",
+                                                        house_number: "Sesamstadt",
+                                                        zip: "12345",
+                                                        city: "Sesamstadt",
+                                                        phone_number: "0190123456",
+                                                        date_of_birth: "06.10.1980",
+                                                        email: "peter@example.com") }
+        it "can be initiated" do
+          subject
+
+          expect_successfull_initialization
+        end
       end
     end
 
