@@ -35,7 +35,7 @@ module SecupayRuby
       !hash.nil?
     end
 
-    def init(amount:, payment_type:, demo: 1)
+    def init(amount:, payment_type:, demo: 0)
       @response = nil
 
       @amount = amount
