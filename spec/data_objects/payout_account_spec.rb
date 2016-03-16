@@ -18,16 +18,6 @@ describe SecupayRuby::DataObjects::PayoutAccount do
         expect(payout_account.send(attribute)).to eq(attributes[attribute])
       end
     end
-
-    it 'throws an error if any argument is missing' do
-      attributes.keys.each do |attribute|
-        partial_attributes = attributes
-        partial_attributes[attribute] = nil;
-
-        expect{ SecupayRuby::DataObjects::PayoutAccount.new(partial_attributes) }
-          .to raise_error(ArgumentError)
-      end
-    end
   end
 
   describe "#to_api_fields" do

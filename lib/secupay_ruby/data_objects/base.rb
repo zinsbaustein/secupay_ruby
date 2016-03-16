@@ -22,20 +22,11 @@ module SecupayRuby
         api_fields.keys.each do |key|
           value = attributes[key]
 
-          raise_attribute_missing_error(key) if value.nil?
-
           self.send("#{key}=", value)
         end
       end
 
       private
-
-      def raise_attribute_missing_error(attribute)
-        raise ArgumentError.new("Required attributes are: " +
-                                api_fields.keys.to_s +
-                                " --- missing: " +
-                                attribute.to_s)
-      end
 
       def api_fields
         self.class::API_FIELDS
